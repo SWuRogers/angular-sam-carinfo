@@ -1,0 +1,33 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3 mb-3">
+      <label for="year">Year</label>
+      <span id="year" class="form-control">{{carInfo?.year}}</span>
+    </div>
+    <div class="col-sm-3">
+      <label for="make">Make</label>
+      <span id="make" class="form-control">{{carInfo?.carMakeName}}</span>
+    </div>
+    <div class="col-sm-3">
+      <label for="model">Model</label>
+      <span id="model" class="form-control">{{carInfo?.carModelName}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3 mb-3">
+      <label for="color">Color</label>
+      <span id="color" class="form-control">{{carInfo?.color}}</span>
+    </div>
+    <div class="col-sm-3">
+      <label for="price">Price</label>
+      <span id="price" class="form-control">{{carInfo?.price | currency:'CAD'}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <img width="300px" [src]="carInfo!=null && carInfo.imageBase64!=null? 
+        carInfo.imageBase64: '../../assets/no_uploaded.png'"/>
+    </div>
+  </div>
+</div>
