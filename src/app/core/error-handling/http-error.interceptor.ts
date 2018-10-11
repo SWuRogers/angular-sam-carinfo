@@ -18,8 +18,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     const jsonReq = req.clone({headers: new HttpHeaders({'Content-Type': 'application/json', 'Accept': 'application/json'})});
 
     //return next.handle(req);
-    //return next.handle(jsonReq).pipe(timeout(3000), tap( ()=>{},
-    return next.handle(jsonReq).pipe(tap( ()=>{},
+    return next.handle(jsonReq).pipe(timeout(6000), tap( ()=>{},
+    //return next.handle(jsonReq).pipe(tap( ()=>{},
       (err) => {
         console.log(`From MyErrorHandler: ${err}`);
 

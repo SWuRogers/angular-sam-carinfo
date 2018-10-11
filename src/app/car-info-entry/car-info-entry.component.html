@@ -14,7 +14,7 @@
       </div>
       <div class="col-sm-3">
         <label for="make">make</label>
-        <select id="make" class="form-control" formControlName="makeObj" (change)="onMakeChanged()">
+        <select id="make" class="form-control" formControlName="makeObj">
           <option *ngFor="let make of lstCarMake" [ngValue] ="make">{{make.carMakeName}}</option>
         </select>
       </div>
@@ -62,9 +62,12 @@
       </div>
 
     <div class="row">
-      <div class="col-sm-9">
-          <button class="btn btn-outline-secondary float-right" type="submit" >Add</button> 
+      <div class="col-sm-9 mt-3">
+          <button class="btn btn-outline-secondary mx-auto d-block"   type="submit" >Add</button> 
       </div>
+      <div class="col-sm-9 mt-3">
+        <button class="btn btn-outline-secondary mx-auto d-block" type="button" (click)="undo()">Undo</button> 
+    </div>
     </div>
   </div>
 

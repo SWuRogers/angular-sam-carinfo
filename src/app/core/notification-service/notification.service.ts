@@ -9,12 +9,11 @@ import { publish, refCount } from 'rxjs/operators';
 export class NotificationService {
 
   private notification: BehaviorSubject<string> = new BehaviorSubject(null);
-  readonly notification$: Observable<string> = this.notification.asObservable().pipe(publish()).pipe(refCount());
+  readonly notification$: Observable<string> = this.notification.asObservable().pipe(publish(),refCount());
   
   notify(msg: string){
     this.notification.next(msg);
     setTimeout(() => this.notification.next(null), 6000);
-    
   }
 
   constructor() {}

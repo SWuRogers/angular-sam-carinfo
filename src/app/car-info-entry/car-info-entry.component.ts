@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { CarEntry, CarMake, CarinfoService } from '../core/carinfo-service';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { NotificationService } from '../core/notification-service/notification.service';
 import { Router } from '@angular/router';
+import { Subject, Observable, BehaviorSubject, defer, of } from 'rxjs';
+import { publish, refCount, multicast, catchError } from 'rxjs/operators';
 
 
 @Component({
@@ -17,6 +19,8 @@ export class CarInfoEntryComponent implements OnInit {
   currentSelectedCarMake: CarMake;
   imageSizeLimit = 1024*1024*4;
 
+  private formState:any;
+
   carEntryForm = this.fb.group({
     year: [(new Date).getFullYear(), [Validators.required, Validators.min(1885), Validators.pattern('[0-9]{4}'), Validators.max((new Date).getFullYear()+1)]],
     makeObj: [''],
@@ -27,25 +31,35 @@ export class CarInfoEntryComponent implements OnInit {
     imageFile: [null]
   });
 
+
   constructor(private fb: FormBuilder, 
     private carInfoClient: CarinfoService, 
-    private notiClient: NotificationService,
-    private router: Router) { }
+    //private notiClient: NotificationService,
+    //private router: Router
+    ) { }
 
   ngOnInit() {
+
+    this.onChanges();
+
     this.carInfoClient.getCarmakes().subscribe(v => {
+
       this.lstCarMake = v;
       if (this.lstCarMake && this.lstCarMake.length > 0){
         this.currentSelectedCarMake = this.lstCarMake[0];
         this.carEntryForm.controls["makeObj"].setValue(this.currentSelectedCarMake);
         this.carEntryForm.controls["model"].setValue(this.currentSelectedCarMake.carModels[0].carModelId);
       }
+    this.formState = this.carEntryForm.value;
+
     });
   }
 
-  onMakeChanged(){
-    this.currentSelectedCarMake = this.carEntryForm.controls["makeObj"].value;
-    this.carEntryForm.controls["model"].setValue(this.currentSelectedCarMake.carModels[0].carModelId);
+  onChanges(): void {
+    this.carEntryForm.get('makeObj').valueChanges.subscribe( (val: CarMake) => {
+      this.currentSelectedCarMake = val;
+      this.carEntryForm.controls["model"].setValue(val.carModels[0].carModelId);
+    });
   }
 
   onFileChanged(event) {
@@ -65,13 +79,22 @@ export class CarInfoEntryComponent implements OnInit {
         this.carEntryForm.patchValue({
           imageFile: reader.result
         });
-        ;
       };
-  }
+    }else{
+      this.carEntryForm.patchValue({
+        imageSize: 0,
+        imageFile: reader.result
+      });
+    }
+
     
+  }
+  undo(){
+    this.carEntryForm.patchValue(this.formState);
   }
 
   onSubmit(){
+
     this.submitted = true;
 
     console.log(this.carEntryForm.controls.imageSize.errors);
@@ -79,19 +102,24 @@ export class CarInfoEntryComponent implements OnInit {
       return;
     }
 
+    const reqFormData = Object.assign({}, this.formState, this.carEntryForm.value);
+
+    console.log(reqFormData);
+    //return;
     this.carInfoClient.addCarEntry(
       new CarEntry({
-        year: this.carEntryForm.get("year").value,
-        carModelId: this.carEntryForm.get("model").value, 
-        color: this.carEntryForm.get("color").value,
-        price: this.carEntryForm.get("price").value, 
-        imageBase64: this.carEntryForm.get("imageFile").value
+        year: reqFormData.year,
+        carModelId: reqFormData.model, 
+        color: reqFormData.color,
+        price: reqFormData.price, 
+        imageBase64: reqFormData.imageFile
       })
     ).subscribe(
         (v) => {
           console.log(v.carId);
-          this.notiClient.notify('Car Info Added');
-          this.router.navigateByUrl(`/display/${v.carId}`);
+          this.formState = reqFormData;
+          //this.notiClient.notify('Car Info Added');
+          //this.router.navigateByUrl(`/display/${v.carId}`);
         } 
     )
   }

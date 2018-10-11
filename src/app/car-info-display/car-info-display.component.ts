@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CarInfo, CarinfoService } from '../core/carinfo-service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, delay } from 'rxjs/operators';
+import { defer, of, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-car-info-display',
@@ -11,11 +12,30 @@ import { switchMap } from 'rxjs/operators';
 export class CarInfoDisplayComponent implements OnInit {
 
 
+  
+
   carInfo: CarInfo;
   
   constructor(private carInfoClient: CarinfoService, private route: ActivatedRoute) { }
 
   ngOnInit() {
+
+    // const p = new Promise(r => {
+    //   console.log(`PStart`);
+    //   setTimeout(c => r(), 1000);
+    //   console.log(`Pend`);
+    // });
+    
+    // setTimeout(() => {
+    //   console.log('MStart');
+    //   p.then(() => {
+    //     console.log('From Then');
+    //   });
+    //   console.log('MEnd');
+
+    // }, 2000);
+
+
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         console.log(params.get('id'));

@@ -21,7 +21,7 @@ import { ErrorHandlingModule } from './core/error-handling/error-handling.module
     ErrorHandlingModule
   ],
   providers: [
-    {provide: 'BaseUrl', useValue: 'http://localhost:5000'},
+    {provide: 'BaseUrl', useValue: 'http://mywin:5000'},
   ],
   bootstrap: [AppComponent]
 })

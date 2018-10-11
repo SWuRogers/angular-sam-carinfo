@@ -1,10 +1,10 @@
-export class CarMake{
-    carmakeId: number;
-    carmakeName: string;
+export interface CarMake{
+    carMakeId: number;
+    carMakeName: string;
     carModels : CarModel[];
   }
   
-  export class CarModel{
+  export interface CarModel{
     carModelId: number;
     carModelName: string;
     carmake: CarMake;
@@ -31,7 +31,7 @@ export class CarMake{
     imageBase64: string; 
   }
   
-  export class CarInfo{
+  export interface CarInfo{
     carId: number;
     carMakeName: string;
     carModelName: string;
