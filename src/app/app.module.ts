@@ -7,6 +7,7 @@ import { CarInfoEntryModule } from './car-info-entry/car-info-entry.module';
 import { CarInfoDisplayModule } from './car-info-display/car-info-display.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandlingModule } from './core/error-handling/error-handling.module';
+import { CarQuestionsModule } from './car-questions/car-questions.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ErrorHandlingModule } from './core/error-handling/error-handling.module
     CarInfoEntryModule,
     CarInfoDisplayModule,
     HttpClientModule,
-    ErrorHandlingModule
+    ErrorHandlingModule,
+    CarQuestionsModule
   ],
   providers: [
     {provide: 'BaseUrl', useValue: 'http://mywin:5000'},

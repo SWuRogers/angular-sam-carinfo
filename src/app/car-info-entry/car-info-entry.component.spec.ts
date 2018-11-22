@@ -38,6 +38,8 @@ describe('CarInfoEntryComponent', () => {
         expect(v.carId).toBe(1);
       });
   
+      
+
       const req = httpMock.expectOne('http://mywin:5000/car/1');
       expect(req.request.method).toBe("GET");
       req.flush(dummyCar);

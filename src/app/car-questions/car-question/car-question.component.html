@@ -1,0 +1,7 @@
+<div>
+  <label [attr.for]="question.key">{{question.label}}</label>
+  <div [ngSwitch]="question.controlType">
+    <div *ngSwitchCase="'textbox'" >output</div>
+    <div *ngSwitchDefault>output2</div>
+  </div>
+</div>

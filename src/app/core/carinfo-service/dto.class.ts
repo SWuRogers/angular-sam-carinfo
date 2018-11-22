@@ -11,6 +11,22 @@ export interface CarMake{
   }
   
   
+  export class CarEntry1{
+    carId: number;
+    carModelId: number;
+    year: number;
+    color: string;
+    price: number;
+    imageBase64: string; 
+
+    constructor(myObj:{carModelId?:number, year?:number, color?: string, price?: number, imageBase64?:string}={}){
+      this.carId = 0;
+      //this.carModelId = obj.carModelId || 0;
+
+      
+    }
+  }
+
   export class CarEntry{
     constructor(obj?: any){
       this.carId = obj && obj.id || 0;
@@ -22,13 +38,13 @@ export interface CarMake{
 
       console.log(`${this.carModelId}|${this.year}|${this.color}|${this.price}`);
     }
-  
     carId: number;
     carModelId: number;
     year: number;
     color: string;
     price: number;
     imageBase64: string; 
+
   }
   
   export interface CarInfo{

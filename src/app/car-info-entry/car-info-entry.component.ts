@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter, AfterViewChecked, ViewChild, ViewContainerRef, TemplateRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { CarEntry, CarMake, CarinfoService } from '../core/carinfo-service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NotificationService } from '../core/notification-service/notification.service';
@@ -10,16 +10,34 @@ import { publish, refCount, multicast, catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-car-info-entry',
   templateUrl: './car-info-entry.component.html',
-  styleUrls: ['./car-info-entry.component.scss']
+  styleUrls: ['./car-info-entry.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarInfoEntryComponent implements OnInit {
+export class CarInfoEntryComponent implements OnInit, AfterViewInit {
+
+
+  //@ViewChild('vc', {read: ViewContainerRef}) vc: ViewContainerRef;
+  //@ViewChild('tpl', {read:TemplateRef}) tpl: TemplateRef<null>;
+
+
+ ngAfterViewInit(): void {
+   //this.vc.createEmbeddedView(this.tpl);
+ }
 
   submitted: boolean = false;
   lstCarMake: CarMake[];
   currentSelectedCarMake: CarMake;
   imageSizeLimit = 1024*1024*4;
 
+  isAddBtnDisabled = false;
+
+  toggleAddBtn(){
+    this.isAddBtnDisabled = !this.isAddBtnDisabled;
+  }
+  
   private formState:any;
+
+
 
   carEntryForm = this.fb.group({
     year: [(new Date).getFullYear(), [Validators.required, Validators.min(1885), Validators.pattern('[0-9]{4}'), Validators.max((new Date).getFullYear()+1)]],
@@ -107,13 +125,13 @@ export class CarInfoEntryComponent implements OnInit {
     console.log(reqFormData);
     //return;
     this.carInfoClient.addCarEntry(
-      new CarEntry({
+      new CarEntry([{
         year: reqFormData.year,
         carModelId: reqFormData.model, 
         color: reqFormData.color,
         price: reqFormData.price, 
         imageBase64: reqFormData.imageFile
-      })
+      }])
     ).subscribe(
         (v) => {
           console.log(v.carId);
